@@ -22,10 +22,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/user")
 public class UserController {
 
@@ -47,20 +49,20 @@ public class UserController {
     }
 
     @GetMapping("/all/{username}")
-    public ResponseEntity<User> getUserByUsername(@PathVariable("username") String username) {
+    public ResponseEntity<User> getUserByUsername(@Valid @PathVariable("username") String username) {
         Optional<User> userOptional = userService.findByUserName(username);
         return userOptional.map(user -> new ResponseEntity<>(user, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/add")
-    public ResponseEntity<User> addUser(@RequestBody User user) {
+    public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
         User newUser = userService.addUser(user);
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{username}")
-    public ResponseEntity<User> updateUser(@PathVariable("username") String username, @RequestBody User user) {
+    public ResponseEntity<User> updateUser(@Valid @PathVariable("username") String username,@Valid @RequestBody User user) {
         Optional<User> userOptional = userService.findByUserName(username);
         return userOptional.map(user1 -> {
             user.setUserName(user1.getUserName());
@@ -69,7 +71,7 @@ public class UserController {
     }
 
     @DeleteMapping("/delete/{username}")
-    public ResponseEntity<User> deleteUser(@PathVariable("username") String username) {
+    public ResponseEntity<User> deleteUser(@Valid @PathVariable("username") String username) {
         try {
             userService.removeUser(username);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

@@ -1,2 +1,3 @@
 - sortBy and page: http://localhost:8080/user/page?sortBy=firstname&page=1
 - search: http://localhost:8080/user/search?firstname=Vo&lastname=Long&email=vo
+- run project: port 8080 Swagger: http://localhost:8080/swagger-ui.html#!/

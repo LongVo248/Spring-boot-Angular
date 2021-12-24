@@ -1,31 +1,38 @@
 package com.example.springbootangular.Model;
 
 
+import com.example.springbootangular.Audit.Auditable;
 import lombok.Data;
-import lombok.ToString;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 @Entity
 @Data
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "tb_user")
-public class User {
+public class User extends Auditable<String> {
     @Id
     @Column(name = "username")
     private String userName;
 
     @Column(name = "pw")
+    @NotEmpty(message = "Please provide password")
     private String pwd;
 
     @Column(name = "first_name")
+    @NotEmpty(message = "Please provide firstname")
     private String firstname;
 
     @Column(name = "last_name")
+    @NotEmpty(message = "Please provide lastname")
     private String lastname;
 
     @Column(name = "email")
+    @Email(message = "Invalid email!")
+    @NotBlank(message = "Please provide email")
     private String email;
 }
