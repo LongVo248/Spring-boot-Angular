@@ -1,0 +1,2 @@
+- sortBy and page: http://localhost:8080/user/page?sortBy=firstname&page=1
+- search: http://localhost:8080/user/search?firstname=Vo&lastname=Long&email=vo

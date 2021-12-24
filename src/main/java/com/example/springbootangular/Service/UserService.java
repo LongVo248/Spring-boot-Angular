@@ -8,11 +8,14 @@ import java.util.Optional;
 public interface UserService {
     List<User> findAllUser();
 
+//    List<User> findAll();
+
     Optional<User> findByUserName(String userName);
 
     User addUser(User user);
 
     User saveUser(User user);
+
 
 //    Optional<User> updateByUserName(String userName);
 
