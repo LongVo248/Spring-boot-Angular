@@ -10,6 +10,7 @@ import net.kaczmarzyk.spring.data.jpa.domain.In;
 import net.kaczmarzyk.spring.data.jpa.domain.Like;
 import net.kaczmarzyk.spring.data.jpa.web.annotation.And;
 import net.kaczmarzyk.spring.data.jpa.web.annotation.Spec;
+import org.dom4j.rule.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,7 +20,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -35,6 +38,9 @@ public class UserController {
     private final UserServiceImpl userServiceImpl;
     private final UserService userService;
 
+
+    private BCryptPasswordEncoder passwordEncoder;
+
     @Autowired
     public UserController(UserPageRepository userPageRepository, UserServiceImpl userServiceImpl, UserService userService) {
         this.userPageRepository = userPageRepository;
@@ -42,6 +48,21 @@ public class UserController {
         this.userService = userService;
     }
 
+//    @GetMapping("/login")
+//    public ModelAndView login(){
+//        ModelAndView modelAndView= new ModelAndView("login");
+//        return modelAndView;
+//    }
+
+    @GetMapping("/home")
+    public String home() {
+        return "This is user Page";
+    }
+
+    @GetMapping("/admin")
+    public String admin() {
+        return "This is Admin Page";
+    }
 
     @GetMapping("/all")
     public ResponseEntity<List<User>> getAllUser() {
@@ -57,12 +78,15 @@ public class UserController {
 
     @PostMapping("/add")
     public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
+        String pwd= user.getPwd();
+        String encryptPwd= passwordEncoder.encode(pwd);
+        user.setPwd(encryptPwd);
         User newUser = userService.addUser(user);
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{username}")
-    public ResponseEntity<User> updateUser(@Valid @PathVariable("username") String username,@Valid @RequestBody User user) {
+    public ResponseEntity<User> updateUser(@Valid @PathVariable("username") String username, @Valid @RequestBody User user) {
         Optional<User> userOptional = userService.findByUserName(username);
         return userOptional.map(user1 -> {
             user.setUserName(user1.getUserName());
@@ -81,12 +105,12 @@ public class UserController {
     }
 
     //page
-        @GetMapping("/page")
-    public Page<User> getUsers(@RequestParam Optional<Integer> page, @RequestParam Optional<String> sortBy) {
+    @GetMapping("/page")
+    public Page<User> getUsers(@RequestParam Optional<Integer> page, @RequestParam Optional<String> sortBy, @RequestParam Optional<Integer> size) {
         return userPageRepository.findAll(
                 PageRequest.of(
                         page.orElse(0),
-                        5,
+                        size.orElse(5),
                         Sort.Direction.ASC, sortBy.orElse("userName")
                 )
         );

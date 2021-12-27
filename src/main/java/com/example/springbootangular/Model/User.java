@@ -3,12 +3,15 @@ package com.example.springbootangular.Model;
 
 import com.example.springbootangular.Audit.Auditable;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import java.util.Set;
 
 @Entity
 @Data
@@ -35,4 +38,10 @@ public class User extends Auditable<String> {
     @Email(message = "Invalid email!")
     @NotBlank(message = "Please provide email")
     private String email;
+
+    @Column(name = "role")
+    private String role;
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+//    private Set<Role> roles;
 }
