@@ -1,8 +1,8 @@
 package com.example.springbootangular.Service;
 
 import com.example.springbootangular.Model.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+//import org.springframework.security.core.userdetails.UserDetails;//security
+//import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,5 +23,5 @@ public interface UserService {
 
     void removeUser(String userName);
 
-    UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException;
+//    UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException; //security
 }

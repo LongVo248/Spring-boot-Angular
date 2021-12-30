@@ -2,22 +2,22 @@ package com.example.springbootangular.Model;
 
 
 import com.example.springbootangular.Audit.Auditable;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
-import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "tb_user")
-public class User extends Auditable<String> {
+@Table(name = "tb_user1")
+public class User extends Auditable<String> {//extends Auditable<String>
     @Id
     @Column(name = "username")
     private String userName;

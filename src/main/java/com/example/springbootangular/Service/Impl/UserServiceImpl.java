@@ -2,7 +2,7 @@ package com.example.springbootangular.Service.Impl;
 
 import com.example.springbootangular.Exception.UserAlreadyExistedException;
 import com.example.springbootangular.Exception.UserNotFoundException;
-import com.example.springbootangular.Model.CustomUserDetails;
+//import com.example.springbootangular.Model.CustomUserDetails; security
 import com.example.springbootangular.Model.User;
 import com.example.springbootangular.Model.utils.PagingHeaders;
 import com.example.springbootangular.Model.utils.PagingResponse;
@@ -17,9 +17,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+//import org.springframework.security.core.userdetails.UserDetails; //security
+//import org.springframework.security.core.userdetails.UserDetailsService;
+//import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,7 +28,7 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-public class UserServiceImpl implements UserService, UserDetailsService { //
+public class UserServiceImpl implements UserService { //, UserDetailsService //security
     private final UserPageRepository userPageRepository;
 
     private final UserRepository userRepository;
@@ -118,12 +118,13 @@ public class UserServiceImpl implements UserService, UserDetailsService { //
         return userPageRepository.findAll(spec, sort);
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        User user = userRepository.findByUserName(userName);
-        if(user ==null) {
-            throw new UsernameNotFoundException("User Not Found");
-        }
-        return new CustomUserDetails(user);
-    }
+    //security
+//    @Override
+//    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+//        User user = userRepository.findByUserName(userName);
+//        if(user ==null) {
+//            throw new UsernameNotFoundException("User Not Found");
+//        }
+//        return new CustomUserDetails(user);
+//    }
 }

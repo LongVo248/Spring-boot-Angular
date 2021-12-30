@@ -1,8 +1,6 @@
--- noinspection SqlNoDataSourceInspectionForFile
+DROP TABLE IF EXISTS TB_USER1;
 
-DROP TABLE IF EXISTS tb_user;
-
-CREATE TABLE tb_user
+CREATE TABLE TB_USER1
 (
     username  VARCHAR(250) PRIMARY KEY,
     pw  VARCHAR(250) NOT NULL,

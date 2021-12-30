@@ -20,26 +20,22 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
-@CrossOrigin("*")
-@RequestMapping("/user")
+@RequestMapping("/api/v1")
 public class UserController {
 
     private final UserPageRepository userPageRepository;
     private final UserServiceImpl userServiceImpl;
     private final UserService userService;
-
-
-    private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     public UserController(UserPageRepository userPageRepository, UserServiceImpl userServiceImpl, UserService userService) {
@@ -48,44 +44,35 @@ public class UserController {
         this.userService = userService;
     }
 
-//    @GetMapping("/login")
-//    public ModelAndView login(){
-//        ModelAndView modelAndView= new ModelAndView("login");
-//        return modelAndView;
+//    @GetMapping("/users/registeruser")
+//    public User registerUser(@RequestBody User user){
+//        String username= user.getUserName();
+//        if (username!=null && !"".equals(username)){
+//            User userobj= userService.findByUserName(username);
+//        }
 //    }
-
-    @GetMapping("/home")
-    public String home() {
-        return "This is user Page";
-    }
-
-    @GetMapping("/admin")
-    public String admin() {
-        return "This is Admin Page";
-    }
-
-    @GetMapping("/all")
+    @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUser() {
         return new ResponseEntity<>(userService.findAllUser(), HttpStatus.OK);
     }
 
-    @GetMapping("/all/{username}")
+    @GetMapping("/users/{username}")
     public ResponseEntity<User> getUserByUsername(@Valid @PathVariable("username") String username) {
         Optional<User> userOptional = userService.findByUserName(username);
         return userOptional.map(user -> new ResponseEntity<>(user, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PostMapping("/add")
+    @PostMapping("/users")
     public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
-        String pwd= user.getPwd();
-        String encryptPwd= passwordEncoder.encode(pwd);
-        user.setPwd(encryptPwd);
+//        String pwd= user.getPwd();
+//        String encryptPwd= passwordEncoder.encode(pwd);
+//        user.setPwd(encryptPwd);
         User newUser = userService.addUser(user);
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
-    @PutMapping("/update/{username}")
+    @PutMapping("/users/{username}")
     public ResponseEntity<User> updateUser(@Valid @PathVariable("username") String username, @Valid @RequestBody User user) {
         Optional<User> userOptional = userService.findByUserName(username);
         return userOptional.map(user1 -> {
@@ -94,7 +81,7 @@ public class UserController {
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @DeleteMapping("/delete/{username}")
+    @DeleteMapping("/users/{username}")
     public ResponseEntity<User> deleteUser(@Valid @PathVariable("username") String username) {
         try {
             userService.removeUser(username);
@@ -105,7 +92,7 @@ public class UserController {
     }
 
     //page
-    @GetMapping("/page")
+    @GetMapping("/users/page")
     public Page<User> getUsers(@RequestParam Optional<Integer> page, @RequestParam Optional<String> sortBy, @RequestParam Optional<Integer> size) {
         return userPageRepository.findAll(
                 PageRequest.of(
@@ -119,7 +106,7 @@ public class UserController {
 
     //filter- searching
     @Transactional
-    @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/users/search", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<User>> get(
             @And({
@@ -127,8 +114,6 @@ public class UserController {
                     @Spec(path = "firstname", params = "firstname", spec = Like.class),
                     @Spec(path = "lastname", params = "lastname", spec = In.class),
                     @Spec(path = "email", params = "email", spec = Like.class),
-//                    @Spec(path = "createDate", params = "createDate", spec = Equal.class),
-//                    @Spec(path = "createDate", params = {"createDateGt", "createDateLt"}, spec = Between.class)
             }) Specification<User> spec,
             Sort sort,
             @RequestHeader HttpHeaders headers) {
