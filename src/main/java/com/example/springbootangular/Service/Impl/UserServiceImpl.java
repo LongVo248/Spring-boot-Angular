@@ -2,7 +2,6 @@ package com.example.springbootangular.Service.Impl;
 
 import com.example.springbootangular.Exception.UserAlreadyExistedException;
 import com.example.springbootangular.Exception.UserNotFoundException;
-//import com.example.springbootangular.Model.CustomUserDetails; security
 import com.example.springbootangular.Model.User;
 import com.example.springbootangular.Model.utils.PagingHeaders;
 import com.example.springbootangular.Model.utils.PagingResponse;
@@ -17,9 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
-//import org.springframework.security.core.userdetails.UserDetails; //security
-//import org.springframework.security.core.userdetails.UserDetailsService;
-//import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -62,8 +58,8 @@ public class UserServiceImpl implements UserService { //, UserDetailsService //s
     @Override
     public User addUser(User user) {
         var userList = (List<User>) userRepository.findAll();
-        if (checkTrung(userList, user.getUserName())) {
-            throw new UserAlreadyExistedException("User " + user.getUserName() + " already existed");
+        if (checkTrung(userList, user.getUsername())) {
+            throw new UserAlreadyExistedException("User " + user.getUsername() + " already existed");
         } else {
             return userRepository.save(user);
         }
@@ -71,7 +67,7 @@ public class UserServiceImpl implements UserService { //, UserDetailsService //s
 
     public boolean checkTrung(List<User> users, String userName) {
         for (User s : users) {
-            if (s.getUserName().equals(userName)) {
+            if (s.getUsername().equals(userName)) {
                 return true;
             }
         }

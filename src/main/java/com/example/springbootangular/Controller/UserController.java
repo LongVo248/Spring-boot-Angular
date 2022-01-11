@@ -1,5 +1,7 @@
 package com.example.springbootangular.Controller;
 
+//import com.example.springbootangular.Bean.AuthenticationBean;
+//import com.example.springbootangular.Bean.Greeting;
 import com.example.springbootangular.Model.User;
 import com.example.springbootangular.Model.utils.PagingHeaders;
 import com.example.springbootangular.Model.utils.PagingResponse;
@@ -27,10 +29,11 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 
-@CrossOrigin(origins = "http://localhost:4200")
+
 @RestController
-@RequestMapping("/api/v1")
+@CrossOrigin(origins = "*")
 public class UserController {
 
     private final UserPageRepository userPageRepository;
@@ -44,13 +47,6 @@ public class UserController {
         this.userService = userService;
     }
 
-//    @GetMapping("/users/registeruser")
-//    public User registerUser(@RequestBody User user){
-//        String username= user.getUserName();
-//        if (username!=null && !"".equals(username)){
-//            User userobj= userService.findByUserName(username);
-//        }
-//    }
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUser() {
         return new ResponseEntity<>(userService.findAllUser(), HttpStatus.OK);
@@ -76,7 +72,7 @@ public class UserController {
     public ResponseEntity<User> updateUser(@Valid @PathVariable("username") String username, @Valid @RequestBody User user) {
         Optional<User> userOptional = userService.findByUserName(username);
         return userOptional.map(user1 -> {
-            user.setUserName(user1.getUserName());
+            user.setUsername(user1.getUsername());
             return new ResponseEntity<>(userService.saveUser(user), HttpStatus.OK);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -98,7 +94,7 @@ public class UserController {
                 PageRequest.of(
                         page.orElse(0),
                         size.orElse(5),
-                        Sort.Direction.ASC, sortBy.orElse("userName")
+                        Sort.Direction.ASC, sortBy.orElse("username")
                 )
         );
     }

@@ -20,7 +20,7 @@ import javax.validation.constraints.NotEmpty;
 public class User extends Auditable<String> {//extends Auditable<String>
     @Id
     @Column(name = "username")
-    private String userName;
+    private String username;
 
     @Column(name = "pw")
     @NotEmpty(message = "Please provide password")
@@ -41,7 +41,4 @@ public class User extends Auditable<String> {//extends Auditable<String>
 
     @Column(name = "role")
     private String role;
-//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-//    private Set<Role> roles;
 }
